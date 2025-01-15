@@ -54,5 +54,7 @@ public class Member {
         this.password = password;
         this.phone = phone;
         this.birth = birth;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 }
