@@ -1,5 +1,6 @@
 package com.demo.loopleTalk.domain.member;
 
+import com.demo.loopleTalk.domain.profile.Profile;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,6 +43,10 @@ public class Member {
     @LastModifiedDate
     @Column(name = "updatedAt", nullable = false)
     private LocalDateTime updatedAt;
+
+    @OneToOne
+    @JoinColumn(name = "profileId")
+    private Profile profile;
 
     @Builder
     public Member(String name, String email, String password, String phone, LocalDate birth) {
