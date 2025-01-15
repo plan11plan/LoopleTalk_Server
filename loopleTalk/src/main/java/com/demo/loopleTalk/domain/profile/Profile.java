@@ -52,7 +52,8 @@ public class Profile {
     @Column(name = "updatedAt", nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "profile")
+    @OneToOne
+    @JoinColumn(name = "memberId")
     private Member member;
 
     @Builder
