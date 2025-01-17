@@ -60,4 +60,11 @@ public class Member {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
+
+    public void update(String name, String password, String phone, LocalDate birth) {
+        this.name = name;
+        this.password = password;
+        this.phone = phone;
+        this.birth = birth;
+    }
 }

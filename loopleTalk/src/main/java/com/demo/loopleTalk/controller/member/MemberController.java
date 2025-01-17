@@ -4,6 +4,7 @@ import com.demo.loopleTalk.domain.member.Member;
 import com.demo.loopleTalk.dto.member.AddMemberRequest;
 import com.demo.loopleTalk.dto.member.MemberResponse;
 import com.demo.loopleTalk.dto.member.MembersResponse;
+import com.demo.loopleTalk.dto.member.UpdateMemberRequest;
 import com.demo.loopleTalk.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -48,5 +49,12 @@ public class MemberController {
         memberService.remove(email);
         return ResponseEntity.ok()
                 .build();
+    }
+
+    @PutMapping("/{email}")
+    public ResponseEntity<Member> updateMember(@PathVariable(name = "email") String email, @RequestBody UpdateMemberRequest request) {
+        Member member = memberService.update(email, request);
+        return ResponseEntity.ok()
+                .body(member);
     }
 }
