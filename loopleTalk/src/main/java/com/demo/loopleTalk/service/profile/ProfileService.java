@@ -29,6 +29,12 @@ public class ProfileService {
                 .orElseThrow(() -> new IllegalArgumentException("Profile Not Found : " + id));
     }
 
+    public Member findMember(Long id) {
+        Profile profile = profileRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Profile Not Found : " + id));
+        return profile.getMember();
+    }
+
     public List<Profile> findAll() {
         return profileRepository.findAll();
     }

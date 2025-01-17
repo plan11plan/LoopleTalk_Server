@@ -1,6 +1,8 @@
 package com.demo.loopleTalk.controller.profile;
 
+import com.demo.loopleTalk.domain.member.Member;
 import com.demo.loopleTalk.domain.profile.Profile;
+import com.demo.loopleTalk.dto.member.MemberResponse;
 import com.demo.loopleTalk.dto.profile.AddProfileRequest;
 import com.demo.loopleTalk.dto.profile.ProfileResponse;
 import com.demo.loopleTalk.dto.profile.ProfilesResponse;
@@ -31,6 +33,13 @@ public class ProfileController {
         Profile profile = profileService.find(id);
         return ResponseEntity.ok()
                 .body(new ProfileResponse(profile));
+    }
+
+    @GetMapping("/info/{id}")
+    public ResponseEntity<MemberResponse> findMemberByProfile(@PathVariable(name = "id") Long id) {
+        Member member = profileService.findMember(id);
+        return ResponseEntity.ok()
+                .body(new MemberResponse(member));
     }
 
     @GetMapping
