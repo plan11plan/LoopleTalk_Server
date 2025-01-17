@@ -60,7 +60,7 @@ public class Profile {
     private Member member;
 
     @Builder
-    public Profile(String nickname, String mbti, String job, boolean gender, String location, String intro, double positionX, double positionY) {
+    public Profile(String nickname, String mbti, String job, boolean gender, String location, String intro, double positionX, double positionY, Member member) {
         this.nickname = nickname;
         this.mbti = mbti;
         this.job = job;
@@ -69,5 +69,6 @@ public class Profile {
         this.intro = intro;
         this.positionX = positionX;
         this.positionY = positionY;
+        this.member = member;
     }
 }
