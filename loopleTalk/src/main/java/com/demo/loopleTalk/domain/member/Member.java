@@ -57,8 +57,6 @@ public class Member {
         this.password = password;
         this.phone = phone;
         this.birth = birth;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
     }
 
     public void update(String name, String password, String phone, LocalDate birth) {
