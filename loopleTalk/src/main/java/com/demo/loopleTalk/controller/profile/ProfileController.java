@@ -49,4 +49,11 @@ public class ProfileController {
         return ResponseEntity.ok()
                 .build();
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProfileResponse> updateProfile(@PathVariable(name = "id") Long id, @RequestBody AddProfileRequest request) {
+        Profile profile = profileService.update(id, request);
+        return ResponseEntity.ok()
+                .body(new ProfileResponse(profile));
+    }
 }

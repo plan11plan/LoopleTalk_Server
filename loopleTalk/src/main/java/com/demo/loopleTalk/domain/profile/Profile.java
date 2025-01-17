@@ -71,4 +71,14 @@ public class Profile {
         this.positionY = positionY;
         this.member = member;
     }
+
+    public void update(String nickname, String mbti, String job, String location, String intro, double positionX, double positionY) {
+        this.nickname = nickname;
+        this.mbti = mbti;
+        this.job = job;
+        this.location = location;
+        this.intro = intro;
+        this.positionX = positionX;
+        this.positionY = positionY;
+    }
 }

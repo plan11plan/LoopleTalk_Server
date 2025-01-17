@@ -5,6 +5,7 @@ import com.demo.loopleTalk.domain.profile.Profile;
 import com.demo.loopleTalk.dto.profile.AddProfileRequest;
 import com.demo.loopleTalk.repository.member.MemberRepository;
 import com.demo.loopleTalk.repository.profile.ProfileRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,5 +37,21 @@ public class ProfileService {
         Profile profile = profileRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Profile Not Found : " + id));
         profileRepository.delete(profile);
+    }
+
+    @Transactional
+    public Profile update(Long id, AddProfileRequest request) {
+        Profile profile = profileRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Profile Not Found : " + id));
+        profile.update(
+                request.getNickname(),
+                request.getMbti(),
+                request.getJob(),
+                request.getLocation(),
+                request.getIntro(),
+                request.getPositionX(),
+                request.getPositionY()
+        );
+        return profile;
     }
 }
