@@ -8,6 +8,8 @@ import com.demo.loopleTalk.repository.profile.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class ProfileService {
@@ -24,5 +26,9 @@ public class ProfileService {
     public Profile find(Long id) {
         return profileRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Profile Not Found : " + id));
+    }
+
+    public List<Profile> findAll() {
+        return profileRepository.findAll();
     }
 }
