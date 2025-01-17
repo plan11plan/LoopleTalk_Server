@@ -20,4 +20,9 @@ public class ProfileService {
                 .orElseThrow(() -> new IllegalArgumentException("Member Not Found : " + request.getMemberId()));
         return profileRepository.save(request.of(member));
     }
+
+    public Profile find(Long id) {
+        return profileRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Profile Not Found : " + id));
+    }
 }
