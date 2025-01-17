@@ -44,13 +44,6 @@ public class MemberController {
                 .body(members);
     }
 
-    @DeleteMapping("/{email}")
-    public ResponseEntity<Void> removeMember(@PathVariable(name = "email") String email) {
-        memberService.remove(email);
-        return ResponseEntity.ok()
-                .build();
-    }
-
     @PutMapping("/{email}")
     public ResponseEntity<Member> updateMember(@PathVariable(name = "email") String email, @RequestBody UpdateMemberRequest request) {
         Member member = memberService.update(email, request);

@@ -28,11 +28,6 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
-    public void remove(String email) {
-        Member member = memberRepository.findByEmail(email);
-        memberRepository.delete(member);
-    }
-
     @Transactional
     public Member update(String email, UpdateMemberRequest request) {
         Member member = memberRepository.findByEmail(email);
