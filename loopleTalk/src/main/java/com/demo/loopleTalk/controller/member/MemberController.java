@@ -42,4 +42,11 @@ public class MemberController {
         return ResponseEntity.ok()
                 .body(members);
     }
+
+    @DeleteMapping("/{email}")
+    public ResponseEntity<Void> removeMember(@PathVariable(name = "email") String email) {
+        memberService.remove(email);
+        return ResponseEntity.ok()
+                .build();
+    }
 }

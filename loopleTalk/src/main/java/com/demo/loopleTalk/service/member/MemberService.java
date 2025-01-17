@@ -25,4 +25,9 @@ public class MemberService {
     public List<Member> findAll() {
         return memberRepository.findAll();
     }
+
+    public void remove(String email) {
+        Member member = memberRepository.findByEmail(email);
+        memberRepository.delete(member);
+    }
 }
