@@ -6,6 +6,8 @@ import com.demo.loopleTalk.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class MemberService {
@@ -18,5 +20,9 @@ public class MemberService {
 
     public Member find(String email) {
         return memberRepository.findByEmail(email);
+    }
+
+    public List<Member> findAll() {
+        return memberRepository.findAll();
     }
 }

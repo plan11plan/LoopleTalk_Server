@@ -3,11 +3,14 @@ package com.demo.loopleTalk.controller.member;
 import com.demo.loopleTalk.domain.member.Member;
 import com.demo.loopleTalk.dto.member.AddMemberRequest;
 import com.demo.loopleTalk.dto.member.MemberResponse;
+import com.demo.loopleTalk.dto.member.MembersResponse;
 import com.demo.loopleTalk.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/member")
@@ -28,5 +31,15 @@ public class MemberController {
         Member member = memberService.find(email);
         return ResponseEntity.ok()
                 .body(new MemberResponse(member));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<MembersResponse>> findAllMember() {
+        List<MembersResponse> members = memberService.findAll()
+                .stream()
+                .map(MembersResponse::new)
+                .toList();
+        return ResponseEntity.ok()
+                .body(members);
     }
 }
