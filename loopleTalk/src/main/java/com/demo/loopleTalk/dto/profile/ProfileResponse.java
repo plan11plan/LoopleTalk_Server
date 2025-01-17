@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 public class ProfileResponse {
 
+    private Long profileId;
     private String nickname;
     private String mbti;
     private String job;
@@ -16,6 +17,7 @@ public class ProfileResponse {
     private double positionY;
 
     public ProfileResponse(Profile profile) {
+        this.profileId = profile.getProfileId();
         this.nickname = profile.getNickname();
         this.mbti = profile.getMbti();
         this.job = profile.getJob();
