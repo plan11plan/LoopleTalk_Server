@@ -31,4 +31,10 @@ public class ProfileService {
     public List<Profile> findAll() {
         return profileRepository.findAll();
     }
+
+    public void delete(Long id) {
+        Profile profile = profileRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Profile Not Found : " + id));
+        profileRepository.delete(profile);
+    }
 }

@@ -42,4 +42,11 @@ public class ProfileController {
         return ResponseEntity.ok()
                 .body(profiles);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMember(@PathVariable(name = "id") Long id) {
+        profileService.delete(id);
+        return ResponseEntity.ok()
+                .build();
+    }
 }
