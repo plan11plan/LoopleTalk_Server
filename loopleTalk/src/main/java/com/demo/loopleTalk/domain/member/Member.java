@@ -2,6 +2,7 @@ package com.demo.loopleTalk.domain.member;
 
 import com.demo.loopleTalk.domain.profile.Profile;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,27 +25,27 @@ public class Member {
     @Column(name = "memberId", updatable = false)
     private Long memberId;
 
-    @Column(name = "name", nullable = false)
+    @NotNull
     private String name;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @NotNull
     private String password;
 
-    @Column(name = "phone", nullable = false)
+    @Column(nullable = false, unique = true)
     private String phone;
 
-    @Column(name = "birth", nullable = false)
+    @NotNull
     private LocalDate birth;
 
+    @NotNull
     @CreatedDate
-    @Column(name = "createdAt", nullable = false)
     private LocalDateTime createdAt;
 
+    @NotNull
     @LastModifiedDate
-    @Column(name = "updatedAt", nullable = false)
     private LocalDateTime updatedAt;
 
     @OneToOne(mappedBy = "member")
