@@ -56,7 +56,7 @@ public class Profile {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "memberId")
     private Member member;
 
