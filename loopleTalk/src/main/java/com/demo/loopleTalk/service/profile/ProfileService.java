@@ -40,9 +40,7 @@ public class ProfileService {
     }
 
     public void delete(Long id) {
-        Profile profile = profileRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Profile Not Found : " + id));
-        profileRepository.delete(profile);
+        profileRepository.deleteById(id);
     }
 
     @Transactional
