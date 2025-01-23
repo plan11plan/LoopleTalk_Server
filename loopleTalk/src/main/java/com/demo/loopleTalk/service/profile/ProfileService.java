@@ -21,7 +21,10 @@ public class ProfileService {
     public Profile create(AddProfileRequest request) {
         Member member = memberRepository.findById(request.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("Member Not Found : " + request.getMemberId()));
-        return profileRepository.save(request.of(member));
+        Profile profile = profileRepository.save(request.of());
+        member.setProfile(profile);
+        memberRepository.save(member);
+        return profile;
     }
 
     public Profile find(Long id) {
@@ -37,10 +40,6 @@ public class ProfileService {
 
     public List<Profile> findAll() {
         return profileRepository.findAll();
-    }
-
-    public void delete(Long id) {
-        profileRepository.deleteById(id);
     }
 
     @Transactional

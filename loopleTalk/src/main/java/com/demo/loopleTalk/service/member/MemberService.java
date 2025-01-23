@@ -39,4 +39,9 @@ public class MemberService {
         );
         return member;
     }
+
+    public void delete(String email) {
+        Member member = memberRepository.findByEmail(email);
+        memberRepository.delete(member);
+    }
 }

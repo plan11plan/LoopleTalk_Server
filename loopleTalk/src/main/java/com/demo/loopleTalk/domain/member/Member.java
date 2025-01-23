@@ -3,10 +3,7 @@ package com.demo.loopleTalk.domain.member;
 import com.demo.loopleTalk.domain.profile.Profile;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -48,7 +45,9 @@ public class Member {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "member")
+    @Setter
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "profileId")
     private Profile profile;
 
     @Builder

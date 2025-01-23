@@ -21,7 +21,7 @@ public class AddProfileRequest {
     private double positionY;
     private Long memberId;
 
-    public Profile of(Member member) {
+    public Profile of() {
         return Profile.builder()
                 .nickname(nickname)
                 .mbti(mbti)
@@ -31,7 +31,6 @@ public class AddProfileRequest {
                 .intro(intro)
                 .positionX(positionX)
                 .positionY(positionY)
-                .member(member)
                 .build();
     }
 }

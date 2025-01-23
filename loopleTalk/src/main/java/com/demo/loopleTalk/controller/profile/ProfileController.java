@@ -52,13 +52,6 @@ public class ProfileController {
                 .body(profiles);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMember(@PathVariable(name = "id") Long id) {
-        profileService.delete(id);
-        return ResponseEntity.ok()
-                .build();
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<ProfileResponse> updateProfile(@PathVariable(name = "id") Long id, @RequestBody AddProfileRequest request) {
         Profile profile = profileService.update(id, request);
