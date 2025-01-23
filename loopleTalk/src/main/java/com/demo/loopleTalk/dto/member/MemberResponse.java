@@ -8,6 +8,7 @@ import java.time.LocalDate;
 @Getter
 public class MemberResponse {
 
+    private Long memberId;
     private String name;
     private String email;
     private String password;
@@ -15,6 +16,7 @@ public class MemberResponse {
     private LocalDate birth;
 
     public MemberResponse(Member member) {
+        this.memberId = member.getMemberId();
         this.name = member.getName();
         this.email = member.getEmail();
         this.password = member.getPassword();
