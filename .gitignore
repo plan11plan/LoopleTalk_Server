@@ -1,0 +1,21 @@
+# IntelliJ IDEA 설정 파일 무시
+.idea/
+# 또는 .idea 폴더 안 특정 파일만 무시하고 싶다면
+# .idea/*.xml
+# .idea/*.iml
+
+# Gradle build 폴더 무시
+build/
+.gradle/
+
+# Maven이 있다면?
+target/
+
+# 기타 OS 별로 생기는 파일
+.DS_Store
+Thumbs.db
+
+# 기타 IDE에서 자동생성되는 설정
+*.iws
+*.ipr
+*.iml
