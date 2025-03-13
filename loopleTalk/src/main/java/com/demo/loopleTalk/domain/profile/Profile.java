@@ -1,8 +1,12 @@
 package com.demo.loopleTalk.domain.profile;
 
+import com.demo.loopleTalk.domain.member.Member;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -11,6 +15,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class Profile {
 
@@ -19,44 +24,58 @@ public class Profile {
     @Column(name = "profileId", updatable = false)
     private Long profileId;
 
-    @Column(name = "nickname", nullable = false)
+    @NotNull
     private String nickname;
 
-    @Column(name = "mbti", nullable = false, length = 4)
+    @Column(nullable = false, length = 4)
     private String mbti;
 
-    @Column(name = "job", nullable = false)
+    @NotNull
     private String job;
 
-    @Column(name = "gender", nullable = false)
+    @NotNull
     private boolean gender; // 0(남) or 1(여)
 
-    @Column(name = "location", nullable = false)
+    @NotNull
     private String location;
 
-    @Column(name = "intro")
+    @Column(length = 600)
     private String intro;
 
-    @Column(name = "positionX", nullable = false)
+    @NotNull
     private double positionX;
 
-    @Column(name = "positionY", nullable = false)
+    @NotNull
     private double positionY;
 
+    @NotNull
     @CreatedDate
-    @Column(name = "createdAt", nullable = false)
     private LocalDateTime createdAt;
 
+    @NotNull
     @LastModifiedDate
-    @Column(name = "updatedAt", nullable = false)
     private LocalDateTime updatedAt;
 
+    @OneToOne(mappedBy = "profile")
+    private Member member;
+
     @Builder
-    public Profile(String nickname, String mbti, String job, boolean gender, String location, String intro, double positionX, double positionY) {
+    public Profile(String nickname, String mbti, String job, boolean gender, String location, String intro, double positionX, double positionY, Member member) {
         this.nickname = nickname;
         this.mbti = mbti;
         this.job = job;
         this.gender = gender;
+        this.location = location;
+        this.intro = intro;
+        this.positionX = positionX;
+        this.positionY = positionY;
+        this.member = member;
+    }
+
+    public void update(String nickname, String mbti, String job, String location, String intro, double positionX, double positionY) {
+        this.nickname = nickname;
+        this.mbti = mbti;
+        this.job = job;
         this.location = location;
         this.intro = intro;
         this.positionX = positionX;

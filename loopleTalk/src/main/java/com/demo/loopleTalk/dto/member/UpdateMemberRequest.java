@@ -10,21 +10,17 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class AddMemberRequest {
+public class UpdateMemberRequest {
 
     private String name;
-    private String email;
     private String password;
     private String phone;
     private LocalDate birth;
 
-    public Member of() {
-        return Member.builder()
-                .name(name)
-                .email(email)
-                .password(password)
-                .phone(phone)
-                .birth(birth)
-                .build();
+    public UpdateMemberRequest(Member member) {
+        this.name = member.getName();
+        this.password = member.getPassword();
+        this.phone = member.getPhone();
+        this.birth = member.getBirth();
     }
 }
