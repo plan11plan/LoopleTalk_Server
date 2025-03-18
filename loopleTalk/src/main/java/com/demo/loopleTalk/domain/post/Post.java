@@ -1,45 +1,88 @@
 package com.demo.loopleTalk.domain.post;
 
+import java.time.LocalDateTime;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.demo.loopleTalk.domain.member.Member;
 
 import jakarta.annotation.Nullable;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Null;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
 public class Post {
-    @Id
-    @Nullable
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "post_id", updatable = false)
+	private Long postId;
 
-    private long profileId;
+	@ManyToOne
+	@Null
+	@JoinColumn(name = "member_id")
+	private Member member;
 
-    @NotBlank(message = "내용은 필수입니다")
-    @Size(min = 1, max = 1000, message = "내용은 1자 이상 1000자 이하여야 합니다")
-    private String content;
+	@Nullable
+	@Column(name = "content")
+	private String content;
 
-    private double longitude;
+	@Nullable
+	@Column(name = "longitude")
 
-    private double latitude;
+	private double longitude;
 
-    @Builder
-    public Post(Long postId, long profileId, String content, double longitude, double latitude) {
-        this.postId = postId;
-        this.profileId = profileId;
-        this.content = content;
-        this.longitude = longitude;
-        this.latitude = latitude;
-    }
+	@Nullable
+	@Column(name = "latitude")
+	private double latitude;
+
+	@Column(name = "comment_count")
+	private int commentCount;
+
+	@Column(name = "like_count")
+	private int likeCount;
+
+	@CreatedDate
+	@Nullable
+	@Column(name = "created_at", updatable = false)
+	private LocalDateTime createdAt;
+
+	@LastModifiedDate
+	@Nullable
+	@Column(name = "updated_at")
+	private LocalDateTime updatedAt;
+
+	@Builder
+	public Post(Long postId, Member member, String content, double longitude, double latitude) {
+		this.postId = postId;
+		this.member = member;
+		this.content = content;
+		this.longitude = longitude;
+		this.latitude = latitude;
+	}
+
+	public void updateCommentCount(int count) {
+		this.commentCount += count;
+	}
+
+	public void updateLikeCount(int likeCount) {
+		this.commentCount += likeCount;
+	}
 }
