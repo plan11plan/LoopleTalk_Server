@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.loopleTalk.dto.post.CreatePostRequest;
+import com.demo.loopleTalk.dto.post.NearestPostResponse;
 import com.demo.loopleTalk.dto.post.SinglePostResponse;
 import com.demo.loopleTalk.service.post.PostService;
 import com.demo.loopleTalk.service.post.support.CursorRequest;
@@ -52,6 +54,30 @@ public class PostController {
 	) {
 		Long memberId = mockUserDetails.getMemberId();
 		CursorResponse<SinglePostResponse> response = postService.getPostsByCursor(memberId, cursorRequest);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/nearest")
+	public ResponseEntity<CursorResponse<NearestPostResponse>> getNearestPostsWithinScreen(
+		MockUserDetails mockUserDetails,
+		@RequestParam double topRightX,
+		@RequestParam double topRightY,
+		@RequestParam double bottomLeftX,
+		@RequestParam double bottomLeftY,
+		@RequestParam double myX,
+		@RequestParam double myY,
+		@RequestParam(required = false, defaultValue = "10") Double radius,
+		@ModelAttribute CursorRequest cursorRequest
+	) {
+		CursorResponse<NearestPostResponse> response = postService.getNearestPostsWithinScreen(
+			mockUserDetails.getMemberId(),
+			topRightX, topRightY,
+			bottomLeftX, bottomLeftY,
+			myX, myY,
+			radius,
+			cursorRequest
+		);
 
 		return ResponseEntity.ok(response);
 	}

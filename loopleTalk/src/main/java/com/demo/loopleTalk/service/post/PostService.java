@@ -1,5 +1,6 @@
 package com.demo.loopleTalk.service.post;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ import com.demo.loopleTalk.domain.post.Post;
 import com.demo.loopleTalk.domain.post.PostHashtag;
 import com.demo.loopleTalk.domain.profile.Profile;
 import com.demo.loopleTalk.dto.post.CreatePostRequest;
+import com.demo.loopleTalk.dto.post.NearestPostResponse;
 import com.demo.loopleTalk.dto.post.SinglePostResponse;
 import com.demo.loopleTalk.repository.member.MemberRepository;
 import com.demo.loopleTalk.repository.post.PostHashtagRepository;
@@ -102,6 +104,95 @@ public class PostService {
 		);
 	}
 
+	@Transactional(readOnly = true)
+	public CursorResponse<NearestPostResponse> getNearestPostsWithinScreen(
+		Long memberId,
+		double topRightX, double topRightY,
+		double bottomLeftX, double bottomLeftY,
+		double myX, double myY,
+		double radiusKm,
+		CursorRequest cursorRequest
+	) {
+		List<Post> allPosts = postRepository.findAll();
+
+		// 바운딩 박스 조건: (longitude, latitude)가 [bottomLeftX, topRightX], [bottomLeftY, topRightY] 범위 내인지 필터
+		List<Post> filteredByScreen = allPosts.stream()
+			.filter(p -> p.getLongitude() >= bottomLeftX && p.getLongitude() <= topRightX)
+			.filter(p -> p.getLatitude() >= bottomLeftY && p.getLatitude() <= topRightY)
+			.collect(Collectors.toList());
+
+		// 반경(radius) 필터: 내 위치 (myX, myY)로부터 radiusKm 이내
+		List<PostDistance> filteredByRadius = filteredByScreen.stream()
+			.map(p -> {
+				double distance = calculateDistance(
+					myY, myX,
+					p.getLatitude(), p.getLongitude()
+				);
+				return new PostDistance(p, distance);
+			})
+			.filter(pd -> pd.distance <= radiusKm)
+			.collect(Collectors.toList());
+
+		// 커서 필터: cursorRequest.key()가 있다면 => postId < key
+		List<PostDistance> afterCursorFilter = filteredByRadius.stream()
+			.filter(pd -> {
+				if (cursorRequest.hasKey()) {
+					return pd.post.getPostId() < cursorRequest.key();
+				}
+				return true;
+			})
+			.collect(Collectors.toList());
+
+		afterCursorFilter.sort(Comparator.comparingLong((PostDistance pd) -> pd.post.getPostId()).reversed());
+
+		// size만큼만 잘라내기 -> (cursorRequest.size() 개까지만 보여주기)
+		int limit = Math.min(afterCursorFilter.size(), cursorRequest.size());
+		List<PostDistance> pagedResult = afterCursorFilter.subList(0, limit);
+
+		// 다음 커서 계산: 가져온 목록 중 최솟값 postId
+		long nextKey = pagedResult.stream()
+			.mapToLong(pd -> pd.post.getPostId())
+			.min()
+			.orElse(CursorRequest.NONE_KEY);
+
+		Member currentMember = getMember(memberId);
+		List<NearestPostResponse> content = pagedResult.stream()
+			.map(pd -> {
+				Post post = pd.post;
+				double distance = pd.distance;
+
+				boolean liked = postLikeRepository.existsByMemberIdAndPostId(currentMember.getMemberId(),
+					post.getPostId());
+				List<PostHashtag> hashtags = postHashtagRepository.findAllByPost(post);
+				String postImageUrl = s3Repository.getFileUrl(post.getPostId());
+				boolean modifiable = currentMember.equals(post.getMember());
+
+				Profile writerProfile = post.getMember().getProfile();
+				SinglePostResponse postResponse = new SinglePostResponse(
+					post.getPostId(),
+					postImageUrl,
+					writerProfile.getNickname(),
+					writerProfile.getLocation(),
+					writerProfile.isGender(),
+					post.getContent(),
+					post.getLikeCount(),
+					post.getCommentCount(),
+					hashtags,
+					modifiable,
+					liked,
+					post.getCreatedAt()
+				);
+
+				return new NearestPostResponse(postResponse, distance);
+			})
+			.collect(Collectors.toList());
+
+		return new CursorResponse<>(
+			cursorRequest.next(nextKey),
+			content
+		);
+	}
+
 	/**
 	 * memberId 기준 + cursorRequest(커서) 기준으로 게시글 조회
 	 *   - 커서가 있으면: "postId < cursorRequest.key()" 조건
@@ -165,4 +256,20 @@ public class PostService {
 			.orElseThrow(() -> new EntityNotFoundException("회원이 존재하지 않습니다."));
 	}
 
+	/**
+	 * Haversine 공식 이용, 두 지점 사이의 거리(km)
+	 */
+	private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+		final int R = 6371;
+		double latDistance = Math.toRadians(lat2 - lat1);
+		double lonDistance = Math.toRadians(lon2 - lon1);
+		double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+			+ Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+			* Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		return R * c;
+	}
+
+	private record PostDistance(Post post, double distance) {
+	}
 }
