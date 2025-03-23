@@ -34,7 +34,7 @@ public class PostController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
 	public void addPost(@RequestParam Long memberId, @Valid @RequestBody CreatePostRequest request) {
-		postService.create(memberId, request);
+		postService.createPost(memberId, request);
 	}
 
 	@PatchMapping("/{postId}")
@@ -43,7 +43,7 @@ public class PostController {
 		@RequestParam Long memberId,
 		@PathVariable("postId") Long postId,
 		@Valid @RequestBody UpdatePostRequest request) {
-		postService.updatePostContent(memberId, postId, request);
+		postService.updatePost(memberId, postId, request);
 	}
 
 	@DeleteMapping("/{postId}")

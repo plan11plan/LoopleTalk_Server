@@ -20,7 +20,7 @@ public class PostCreateService {
 	private final MemberRepository memberRepository;
 
 	@Transactional
-	public void create(Long memberId, CreatePostRequest request) {
+	public void createPost(Long memberId, CreatePostRequest request) {
 		Member member = getMember(memberId);
 
 		Post createdPost = Post.builder()

@@ -45,13 +45,13 @@ public class PostService {
 	}
 
 	@Transactional
-	public void create(Long memberId, CreatePostRequest request) {
-		postCreateService.create(memberId, request);
+	public void createPost(Long memberId, CreatePostRequest request) {
+		postCreateService.createPost(memberId, request);
 	}
 
 	@Transactional
-	public void updatePostContent(Long memberId, Long postId, UpdatePostRequest request) {
-		postUpdateService.updatePostContent(memberId, postId, request);
+	public void updatePost(Long memberId, Long postId, UpdatePostRequest request) {
+		postUpdateService.updatePost(memberId, postId, request);
 	}
 
 	@Transactional(readOnly = true)

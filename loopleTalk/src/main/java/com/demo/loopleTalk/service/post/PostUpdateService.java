@@ -19,7 +19,7 @@ public class PostUpdateService {
 	private final MemberRepository memberRepository;
 
 	@Transactional
-	public void updatePostContent(Long memberId, Long postId, UpdatePostRequest request) {
+	public void updatePost(Long memberId, Long postId, UpdatePostRequest request) {
 		validateMember(memberId);
 
 		String toContent = request.content();
