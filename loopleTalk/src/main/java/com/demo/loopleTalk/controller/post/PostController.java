@@ -60,7 +60,7 @@ public class PostController {
 		@RequestParam Long memberId,
 		@PathVariable("postId") Long postId
 	) {
-		SinglePostResponse response = postService.getPost(memberId, postId);
+		SinglePostResponse response = postService.getSinglePost(memberId, postId);
 
 		return ResponseEntity.ok(response);
 	}

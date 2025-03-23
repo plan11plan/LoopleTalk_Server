@@ -39,6 +39,7 @@ public class PostService {
 	private final PostCreateService postCreateService;
 	private final PostUpdateService postUpdateService;
 	private final PostDeleteService postDeleteService;
+	private final PostGetSingleService postGetSingleService;
 
 	public void deletePost(Long memberId, Long postId) {
 		postDeleteService.deletePost(memberId, postId);
@@ -55,13 +56,8 @@ public class PostService {
 	}
 
 	@Transactional(readOnly = true)
-	public SinglePostResponse getPost(Long memberId, Long postId) {
-		Member requestMember = getMember(memberId);
-
-		Post post = postRepository.findById(postId)
-			.orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
-
-		return toSinglePostResponse(post, requestMember);
+	public SinglePostResponse getSinglePost(Long memberId, Long postId) {
+		return postGetSingleService.getSinglePost(memberId, postId);
 	}
 
 	@Transactional(readOnly = true)
