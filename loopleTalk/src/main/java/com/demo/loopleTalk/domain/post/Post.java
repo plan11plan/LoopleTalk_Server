@@ -8,7 +8,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.demo.loopleTalk.domain.member.Member;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -17,7 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,20 +35,20 @@ public class Post {
 	private Long postId;
 
 	@ManyToOne
-	@Null
+	@NotNull
 	@JoinColumn(name = "member_id")
 	private Member member;
 
-	@Nullable
+	@NotNull
 	@Column(name = "content")
 	private String content;
 
-	@Nullable
+	@NotNull
 	@Column(name = "longitude")
 
 	private double longitude;
 
-	@Nullable
+	@NotNull
 	@Column(name = "latitude")
 	private double latitude;
 
@@ -60,12 +59,12 @@ public class Post {
 	private int likeCount;
 
 	@CreatedDate
-	@Nullable
+	@NotNull
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
 
 	@LastModifiedDate
-	@Nullable
+	@NotNull
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
 
