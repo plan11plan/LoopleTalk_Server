@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.demo.loopleTalk.dto.comment.CommentCreateRequest;
 import com.demo.loopleTalk.dto.comment.CommentDeleteRequest;
 import com.demo.loopleTalk.dto.comment.CommentGetSingleRequest;
+import com.demo.loopleTalk.dto.comment.CommentGetSingleResponse;
 import com.demo.loopleTalk.dto.comment.CommentResponse;
 import com.demo.loopleTalk.dto.comment.CommentUpdateRequest;
 import com.demo.loopleTalk.service.comment.CommentService;
@@ -38,12 +39,12 @@ public class CommentController {
 	}
 
 	@GetMapping("/{commentId}")
-	public ResponseEntity<CommentResponse> getComment(
+	public ResponseEntity<CommentGetSingleResponse> getComment(
 		@RequestParam Long memberId,
 		@RequestBody CommentGetSingleRequest commentGetSingleRequest,
 		@PathVariable("commentId") Long commentId) {
 
-		CommentResponse response = commentService.getComment(memberId, commentGetSingleRequest, commentId);
+		CommentGetSingleResponse response = commentService.getComment(memberId, commentGetSingleRequest, commentId);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 

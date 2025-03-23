@@ -7,7 +7,7 @@ public class MockS3Repository implements S3Repository {
 	private final String MOCK_FILE_URL = "http://image";
 
 	@Override
-	public String getFileUrl(Long postId) {
+	public String getFileUrl(Long id) {
 		return MOCK_FILE_URL;
 	}
 }

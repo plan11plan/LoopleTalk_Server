@@ -8,10 +8,12 @@ import com.demo.loopleTalk.domain.post.Post;
 import com.demo.loopleTalk.dto.comment.CommentCreateRequest;
 import com.demo.loopleTalk.dto.comment.CommentDeleteRequest;
 import com.demo.loopleTalk.dto.comment.CommentGetSingleRequest;
+import com.demo.loopleTalk.dto.comment.CommentGetSingleResponse;
 import com.demo.loopleTalk.dto.comment.CommentResponse;
 import com.demo.loopleTalk.dto.comment.CommentUpdateRequest;
 import com.demo.loopleTalk.repository.member.MemberRepository;
 import com.demo.loopleTalk.repository.post.PostRepository;
+import com.demo.loopleTalk.repository.post.S3Repository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +23,12 @@ import lombok.RequiredArgsConstructor;
 public class CommentServiceImpl implements CommentService {
 
 	private final CommentAddComponent commentAddComponent;
-	private final CommentReadComponent commentReadComponent;
+	private final CommentGetSingleComponent commentGetSingleComponent;
 	private final CommentUpdateComponent commentUpdateComponent;
 	private final CommentDeleteComponent commentDeleteComponent;
 	private final MemberRepository memberRepository;
 	private final PostRepository postRepository;
+	private final S3Repository s3Repository;
 
 	@Override
 	public CommentResponse createComment(Long memberId, CommentCreateRequest request) {
@@ -36,20 +39,26 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public CommentResponse getComment(Long memberId, CommentGetSingleRequest commentGetSingleRequest, Long commentId) {
+	public CommentGetSingleResponse getComment(Long memberId, CommentGetSingleRequest commentGetSingleRequest,
+		Long commentId) {
 		Long postId = commentGetSingleRequest.postId();
 
-		validateMember(memberId);
+		Member member = getMember(memberId);
+		String nickname = member.getProfile().getNickname();
+		String fileUrl = s3Repository.getFileUrl(commentId);
 		validatePost(postId);
-		Comment comment = commentReadComponent.getCommentById(commentId);
-		return mapToResponseDto(comment);
+		Comment comment = commentGetSingleComponent.getCommentById(commentId);
+		return new CommentGetSingleResponse(
+			fileUrl,
+			nickname,
+			mapToResponseDto(comment));
 	}
 
 	@Override
 	public CommentResponse updateComment(Long memberId, Long commentId, CommentUpdateRequest request) {
 		validateMember(memberId);
 		validatePost(request.postId());
-		Comment comment = commentReadComponent.getCommentById(commentId);
+		Comment comment = commentGetSingleComponent.getCommentById(commentId);
 		Comment updatedComment = commentUpdateComponent.updateComment(comment, request);
 		return mapToResponseDto(updatedComment);
 	}
@@ -60,7 +69,7 @@ public class CommentServiceImpl implements CommentService {
 		Long postId = commentDeleteRequest.postId();
 		validatePost(postId);
 
-		Comment comment = commentReadComponent.getCommentById(commentId);
+		Comment comment = commentGetSingleComponent.getCommentById(commentId);
 		commentDeleteComponent.deleteComment(comment);
 	}
 

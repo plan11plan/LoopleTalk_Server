@@ -1,5 +1,5 @@
 package com.demo.loopleTalk.repository.post;
 
 public interface S3Repository {
-	String getFileUrl(Long postId);
+	String getFileUrl(Long id);
 }
