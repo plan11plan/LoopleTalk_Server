@@ -16,6 +16,7 @@ import com.demo.loopleTalk.domain.profile.Profile;
 import com.demo.loopleTalk.dto.post.CreatePostRequest;
 import com.demo.loopleTalk.dto.post.NearestPostResponse;
 import com.demo.loopleTalk.dto.post.SinglePostResponse;
+import com.demo.loopleTalk.dto.post.UpdatePostRequest;
 import com.demo.loopleTalk.repository.member.MemberRepository;
 import com.demo.loopleTalk.repository.post.PostHashtagRepository;
 import com.demo.loopleTalk.repository.post.PostLikeRepository;
@@ -36,10 +37,16 @@ public class PostService {
 	private final PostHashtagRepository postHashtagRepository;
 	private final S3Repository s3Repository;
 	private final PostCreateService postCreateService;
+	private final PostUpdateService postUpdateService;
 
 	@Transactional
 	public void create(Long memberId, CreatePostRequest request) {
 		postCreateService.create(memberId, request);
+	}
+
+	@Transactional
+	public void updatePostContent(Long memberId, Long postId, UpdatePostRequest request) {
+		postUpdateService.updatePostContent(memberId, postId, request);
 	}
 
 	@Transactional(readOnly = true)

@@ -77,6 +77,10 @@ public class Post {
 		this.latitude = latitude;
 	}
 
+	public void changeContent(String content) {
+		this.content = content;
+	}
+
 	public void updateCommentCount(int count) {
 		this.commentCount += count;
 	}

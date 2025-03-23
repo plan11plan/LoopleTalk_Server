@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.demo.loopleTalk.dto.post.CreatePostRequest;
 import com.demo.loopleTalk.dto.post.NearestPostResponse;
 import com.demo.loopleTalk.dto.post.SinglePostResponse;
+import com.demo.loopleTalk.dto.post.UpdatePostRequest;
 import com.demo.loopleTalk.service.post.PostService;
 import com.demo.loopleTalk.service.post.support.CursorRequest;
 import com.demo.loopleTalk.service.post.support.CursorResponse;
@@ -30,8 +32,17 @@ public class PostController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
-	public void create(@RequestParam Long memberId, @Valid @RequestBody CreatePostRequest request) {
+	public void addPost(@RequestParam Long memberId, @Valid @RequestBody CreatePostRequest request) {
 		postService.create(memberId, request);
+	}
+
+	@PatchMapping("/{postId}")
+	@ResponseStatus(HttpStatus.OK)
+	public void updatePost(
+		@RequestParam Long memberId,
+		@PathVariable("postId") Long postId,
+		@Valid @RequestBody UpdatePostRequest request) {
+		postService.updatePostContent(memberId, postId, request);
 	}
 
 	@GetMapping("/{postId}")
