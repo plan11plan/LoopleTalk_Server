@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class CommentReadComponent {
+public class CommentGetSingleComponent {
 
 	private final CommentRepository commentRepository;
 
