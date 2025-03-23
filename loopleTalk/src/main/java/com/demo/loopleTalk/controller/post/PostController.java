@@ -2,6 +2,7 @@ package com.demo.loopleTalk.controller.post;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -43,6 +44,14 @@ public class PostController {
 		@PathVariable("postId") Long postId,
 		@Valid @RequestBody UpdatePostRequest request) {
 		postService.updatePostContent(memberId, postId, request);
+	}
+
+	@DeleteMapping("/{postId}")
+	@ResponseStatus(HttpStatus.OK)
+	public void deletePost(
+		@RequestParam Long memberId,
+		@PathVariable("postId") Long postId) {
+		postService.deletePost(memberId, postId);
 	}
 
 	@GetMapping("/{postId}")

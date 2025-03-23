@@ -38,6 +38,11 @@ public class PostService {
 	private final S3Repository s3Repository;
 	private final PostCreateService postCreateService;
 	private final PostUpdateService postUpdateService;
+	private final PostDeleteService postDeleteService;
+
+	public void deletePost(Long memberId, Long postId) {
+		postDeleteService.deletePost(memberId, postId);
+	}
 
 	@Transactional
 	public void create(Long memberId, CreatePostRequest request) {
