@@ -75,22 +75,16 @@ public class PostController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/nearest")
-	public ResponseEntity<CursorResponse<NearestPostResponse>> getNearestPostsWithinScreen(
+	@GetMapping("/cursor/nearest")
+	public ResponseEntity<CursorResponse<NearestPostResponse>> getNearestPosts(
 		@RequestParam Long memberId,
-		@RequestParam double topRightX,
-		@RequestParam double topRightY,
-		@RequestParam double bottomLeftX,
-		@RequestParam double bottomLeftY,
 		@RequestParam double myX,
 		@RequestParam double myY,
 		@RequestParam(required = false, defaultValue = "10") Double radius,
 		@ModelAttribute CursorRequest cursorRequest
 	) {
-		CursorResponse<NearestPostResponse> response = postService.getNearestPostsWithinScreen(
+		CursorResponse<NearestPostResponse> response = postService.getNearestPosts(
 			memberId,
-			topRightX, topRightY,
-			bottomLeftX, bottomLeftY,
 			myX, myY,
 			radius,
 			cursorRequest
@@ -98,4 +92,5 @@ public class PostController {
 
 		return ResponseEntity.ok(response);
 	}
+
 }
