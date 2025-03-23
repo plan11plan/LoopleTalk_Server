@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 
 @Builder
-public record CommentResponseDto(
+public record CommentResponse(
 	Long id,
 	Long postId,
 	String content,

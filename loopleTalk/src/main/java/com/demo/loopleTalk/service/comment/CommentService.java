@@ -1,17 +1,17 @@
 package com.demo.loopleTalk.service.comment;
 
-import com.demo.loopleTalk.dto.comment.CommentCreateDto;
-import com.demo.loopleTalk.dto.comment.CommentDeleteDto;
-import com.demo.loopleTalk.dto.comment.CommentGetSingleDto;
-import com.demo.loopleTalk.dto.comment.CommentResponseDto;
-import com.demo.loopleTalk.dto.comment.CommentUpdateDto;
+import com.demo.loopleTalk.dto.comment.CommentCreateRequest;
+import com.demo.loopleTalk.dto.comment.CommentDeleteRequest;
+import com.demo.loopleTalk.dto.comment.CommentGetSingleRequest;
+import com.demo.loopleTalk.dto.comment.CommentResponse;
+import com.demo.loopleTalk.dto.comment.CommentUpdateRequest;
 
 public interface CommentService {
-	CommentResponseDto createComment(Long memberId, CommentCreateDto createDto);
+	CommentResponse createComment(Long memberId, CommentCreateRequest createDto);
 
-	CommentResponseDto getComment(Long memberId, CommentGetSingleDto commentGetSingleDto, Long commentId);
+	CommentResponse getComment(Long memberId, CommentGetSingleRequest commentGetSingleRequest, Long commentId);
 
-	CommentResponseDto updateComment(Long memberId, Long commentId, CommentUpdateDto updateDto);
+	CommentResponse updateComment(Long memberId, Long commentId, CommentUpdateRequest updateDto);
 
-	void deleteComment(Long memberId, CommentDeleteDto commentDeleteDto, Long commentId);
+	void deleteComment(Long memberId, CommentDeleteRequest commentDeleteRequest, Long commentId);
 }

@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 import com.demo.loopleTalk.domain.comment.Comment;
 import com.demo.loopleTalk.domain.member.Member;
 import com.demo.loopleTalk.domain.post.Post;
-import com.demo.loopleTalk.dto.comment.CommentCreateDto;
-import com.demo.loopleTalk.dto.comment.CommentDeleteDto;
-import com.demo.loopleTalk.dto.comment.CommentGetSingleDto;
-import com.demo.loopleTalk.dto.comment.CommentResponseDto;
-import com.demo.loopleTalk.dto.comment.CommentUpdateDto;
+import com.demo.loopleTalk.dto.comment.CommentCreateRequest;
+import com.demo.loopleTalk.dto.comment.CommentDeleteRequest;
+import com.demo.loopleTalk.dto.comment.CommentGetSingleRequest;
+import com.demo.loopleTalk.dto.comment.CommentResponse;
+import com.demo.loopleTalk.dto.comment.CommentUpdateRequest;
 import com.demo.loopleTalk.repository.member.MemberRepository;
 import com.demo.loopleTalk.repository.post.PostRepository;
 
@@ -28,7 +28,7 @@ public class CommentServiceImpl implements CommentService {
 	private final PostRepository postRepository;
 
 	@Override
-	public CommentResponseDto createComment(Long memberId, CommentCreateDto request) {
+	public CommentResponse createComment(Long memberId, CommentCreateRequest request) {
 		Member member = getMember(memberId);
 		Post post = validatePost(request.postId());
 		Comment comment = commentAddComponent.addComment(member, post, request);
@@ -36,8 +36,8 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public CommentResponseDto getComment(Long memberId, CommentGetSingleDto commentGetSingleDto, Long commentId) {
-		Long postId = commentGetSingleDto.postId();
+	public CommentResponse getComment(Long memberId, CommentGetSingleRequest commentGetSingleRequest, Long commentId) {
+		Long postId = commentGetSingleRequest.postId();
 
 		validateMember(memberId);
 		validatePost(postId);
@@ -46,7 +46,7 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public CommentResponseDto updateComment(Long memberId, Long commentId, CommentUpdateDto request) {
+	public CommentResponse updateComment(Long memberId, Long commentId, CommentUpdateRequest request) {
 		validateMember(memberId);
 		validatePost(request.postId());
 		Comment comment = commentReadComponent.getCommentById(commentId);
@@ -55,17 +55,17 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public void deleteComment(Long memberId, CommentDeleteDto commentDeleteDto, Long commentId) {
+	public void deleteComment(Long memberId, CommentDeleteRequest commentDeleteRequest, Long commentId) {
 		validateMember(memberId);
-		Long postId = commentDeleteDto.postId();
+		Long postId = commentDeleteRequest.postId();
 		validatePost(postId);
 
 		Comment comment = commentReadComponent.getCommentById(commentId);
 		commentDeleteComponent.deleteComment(comment);
 	}
 
-	private CommentResponseDto mapToResponseDto(Comment comment) {
-		return CommentResponseDto.builder()
+	private CommentResponse mapToResponseDto(Comment comment) {
+		return CommentResponse.builder()
 			.id(comment.getId())
 			.postId(comment.getPost().getPostId())
 			.content(comment.getContent())

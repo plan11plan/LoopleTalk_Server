@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demo.loopleTalk.dto.comment.CommentCreateDto;
-import com.demo.loopleTalk.dto.comment.CommentDeleteDto;
-import com.demo.loopleTalk.dto.comment.CommentGetSingleDto;
-import com.demo.loopleTalk.dto.comment.CommentResponseDto;
-import com.demo.loopleTalk.dto.comment.CommentUpdateDto;
+import com.demo.loopleTalk.dto.comment.CommentCreateRequest;
+import com.demo.loopleTalk.dto.comment.CommentDeleteRequest;
+import com.demo.loopleTalk.dto.comment.CommentGetSingleRequest;
+import com.demo.loopleTalk.dto.comment.CommentResponse;
+import com.demo.loopleTalk.dto.comment.CommentUpdateRequest;
 import com.demo.loopleTalk.service.comment.CommentService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,41 +29,41 @@ public class CommentController {
 	private final CommentService commentService;
 
 	@PostMapping
-	public ResponseEntity<CommentResponseDto> createComment(
+	public ResponseEntity<CommentResponse> createComment(
 		@RequestParam Long memberId,
-		@RequestBody CommentCreateDto createDto) {
+		@RequestBody CommentCreateRequest createDto) {
 
-		CommentResponseDto response = commentService.createComment(memberId, createDto);
+		CommentResponse response = commentService.createComment(memberId, createDto);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{commentId}")
-	public ResponseEntity<CommentResponseDto> getComment(
+	public ResponseEntity<CommentResponse> getComment(
 		@RequestParam Long memberId,
-		@RequestBody CommentGetSingleDto commentGetSingleDto,
+		@RequestBody CommentGetSingleRequest commentGetSingleRequest,
 		@PathVariable("commentId") Long commentId) {
 
-		CommentResponseDto response = commentService.getComment(memberId, commentGetSingleDto, commentId);
+		CommentResponse response = commentService.getComment(memberId, commentGetSingleRequest, commentId);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@PatchMapping("/{commentId}")
-	public ResponseEntity<CommentResponseDto> updateComment(
+	public ResponseEntity<CommentResponse> updateComment(
 		@RequestParam Long memberId,
 		@PathVariable Long commentId,
-		@RequestBody CommentUpdateDto updateDto) {
+		@RequestBody CommentUpdateRequest updateDto) {
 
-		CommentResponseDto response = commentService.updateComment(memberId, commentId, updateDto);
+		CommentResponse response = commentService.updateComment(memberId, commentId, updateDto);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{commentId}")
 	public ResponseEntity<Void> deleteComment(
 		@RequestParam Long memberId,
-		@RequestBody CommentDeleteDto commentDeleteDto,
+		@RequestBody CommentDeleteRequest commentDeleteRequest,
 		@PathVariable Long commentId) {
 
-		commentService.deleteComment(memberId, commentDeleteDto, commentId);
+		commentService.deleteComment(memberId, commentDeleteRequest, commentId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }
