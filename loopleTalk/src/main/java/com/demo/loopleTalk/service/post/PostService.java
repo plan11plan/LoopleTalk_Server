@@ -40,6 +40,7 @@ public class PostService {
 	private final PostUpdateService postUpdateService;
 	private final PostDeleteService postDeleteService;
 	private final PostGetSingleService postGetSingleService;
+	private final PostGetByCursorService postGetByCursorService;
 
 	public void deletePost(Long memberId, Long postId) {
 		postDeleteService.deletePost(memberId, postId);
@@ -62,47 +63,7 @@ public class PostService {
 
 	@Transactional(readOnly = true)
 	public CursorResponse<SinglePostResponse> getPostsByCursor(Long memberId, CursorRequest cursorRequest) {
-		Member member = getMember(memberId);
-		List<Post> posts = findAllBy(member, cursorRequest);
-
-		// nextKey 계산 -> 가져온 Post들 중 가장 작은 postId (최소값)
-		long nextKey = posts.stream()
-			.mapToLong(Post::getPostId)
-			.min()
-			.orElse(CursorRequest.NONE_KEY); // 비어있으면 -1
-
-		// Post -> SinglePostResponse 변환
-		List<SinglePostResponse> contentDtos = posts.stream()
-			.map(post -> {
-				// DTO 변환 로직
-				boolean modifiable = post.getMember().getMemberId().equals(member.getMemberId());
-				boolean liked = postLikeRepository.existsByMemberIdAndPostId(member.getMemberId(),
-					post.getPostId());
-				List<PostHashtag> hashtags = postHashtagRepository.findAllByPost(post);
-				String postImageUrl = s3Repository.getFileUrl(post.getPostId());
-
-				Profile writerProfile = post.getMember().getProfile();
-				return new SinglePostResponse(
-					post.getPostId(),
-					postImageUrl,
-					writerProfile.getNickname(),
-					writerProfile.getLocation(),
-					writerProfile.isGender(),
-					post.getContent(),
-					post.getLikeCount(),
-					post.getCommentCount(),
-					hashtags,
-					modifiable,
-					liked,
-					post.getCreatedAt()
-				);
-			})
-			.collect(Collectors.toList());
-
-		return new CursorResponse<>(
-			cursorRequest.next(nextKey),
-			contentDtos
-		);
+		return postGetByCursorService.getPostsByCursor(memberId, cursorRequest);
 	}
 
 	@Transactional(readOnly = true)
