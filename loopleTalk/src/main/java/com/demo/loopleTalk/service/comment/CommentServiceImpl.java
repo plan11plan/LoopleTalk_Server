@@ -1,5 +1,8 @@
 package com.demo.loopleTalk.service.comment;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import com.demo.loopleTalk.domain.comment.Comment;
@@ -7,6 +10,7 @@ import com.demo.loopleTalk.domain.member.Member;
 import com.demo.loopleTalk.domain.post.Post;
 import com.demo.loopleTalk.dto.comment.CommentCreateRequest;
 import com.demo.loopleTalk.dto.comment.CommentDeleteRequest;
+import com.demo.loopleTalk.dto.comment.CommentGetByCursorRequest;
 import com.demo.loopleTalk.dto.comment.CommentGetSingleRequest;
 import com.demo.loopleTalk.dto.comment.CommentGetSingleResponse;
 import com.demo.loopleTalk.dto.comment.CommentResponse;
@@ -14,6 +18,8 @@ import com.demo.loopleTalk.dto.comment.CommentUpdateRequest;
 import com.demo.loopleTalk.repository.member.MemberRepository;
 import com.demo.loopleTalk.repository.post.PostRepository;
 import com.demo.loopleTalk.repository.post.S3Repository;
+import com.demo.loopleTalk.service.support.CursorRequest;
+import com.demo.loopleTalk.service.support.CursorResponse;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +30,7 @@ public class CommentServiceImpl implements CommentService {
 
 	private final CommentAddComponent commentAddComponent;
 	private final CommentGetSingleComponent commentGetSingleComponent;
+	private final CommentGetByCursorComponent commentGetByCursorComponent;
 	private final CommentUpdateComponent commentUpdateComponent;
 	private final CommentDeleteComponent commentDeleteComponent;
 	private final MemberRepository memberRepository;
@@ -52,6 +59,34 @@ public class CommentServiceImpl implements CommentService {
 			fileUrl,
 			nickname,
 			mapToResponseDto(comment));
+	}
+
+	@Override
+	public CursorResponse<CommentGetSingleResponse> getCommentsByCursor(Long memberId,
+		CommentGetByCursorRequest commentGetByCursorRequest,
+		CursorRequest cursorRequest) {
+		validateMember(memberId);
+
+		Post post = validatePost(commentGetByCursorRequest.postId());
+		CursorResponse<Comment> originalResponse = commentGetByCursorComponent.getCommentsByCursor(
+			post,
+			cursorRequest
+		);
+
+		List<CommentGetSingleResponse> mappedList = originalResponse.contents().stream()
+			.map(comment -> {
+				String nickname = comment.getMember().getProfile().getNickname();
+				String profileImage = s3Repository.getFileUrl(comment.getMember().getMemberId());
+				CommentResponse commentResponse = mapToResponseDto(comment);
+				return CommentGetSingleResponse.builder()
+					.nickname(nickname)
+					.profileImage(profileImage)
+					.commentResponse(commentResponse)
+					.build();
+			})
+			.collect(Collectors.toList());
+
+		return new CursorResponse<>(originalResponse.nextCursorRequest(), mappedList);
 	}
 
 	@Override

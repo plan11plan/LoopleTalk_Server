@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,11 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.loopleTalk.dto.comment.CommentCreateRequest;
 import com.demo.loopleTalk.dto.comment.CommentDeleteRequest;
+import com.demo.loopleTalk.dto.comment.CommentGetByCursorRequest;
 import com.demo.loopleTalk.dto.comment.CommentGetSingleRequest;
 import com.demo.loopleTalk.dto.comment.CommentGetSingleResponse;
 import com.demo.loopleTalk.dto.comment.CommentResponse;
 import com.demo.loopleTalk.dto.comment.CommentUpdateRequest;
 import com.demo.loopleTalk.service.comment.CommentService;
+import com.demo.loopleTalk.service.support.CursorRequest;
+import com.demo.loopleTalk.service.support.CursorResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -66,5 +70,17 @@ public class CommentController {
 
 		commentService.deleteComment(memberId, commentDeleteRequest, commentId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@GetMapping("/cursor")
+	public ResponseEntity<CursorResponse<CommentGetSingleResponse>> getCommentsByCursor(
+		@RequestParam Long memberId,
+		@RequestBody CommentGetByCursorRequest commentGetByCursorRequest,
+		@ModelAttribute CursorRequest cursorRequest
+	) {
+
+		CursorResponse<CommentGetSingleResponse> response = commentService.getCommentsByCursor(memberId,
+			commentGetByCursorRequest, cursorRequest);
+		return ResponseEntity.ok(response);
 	}
 }
