@@ -35,18 +35,11 @@ public class PostService {
 	private final PostLikeRepository postLikeRepository;
 	private final PostHashtagRepository postHashtagRepository;
 	private final S3Repository s3Repository;
+	private final PostCreateService postCreateService;
 
 	@Transactional
 	public void create(Long memberId, CreatePostRequest request) {
-		Member member = getMember(memberId);
-
-		Post createdPost = Post.builder()
-			.member(member)
-			.content(request.content())
-			.longitude(request.longitude())
-			.latitude(request.latitude())
-			.build();
-		postRepository.save(createdPost);
+		postCreateService.create(memberId, request);
 	}
 
 	@Transactional(readOnly = true)
