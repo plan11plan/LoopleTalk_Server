@@ -1,4 +1,4 @@
-package com.demo.loopleTalk.service.post.support;
+package com.demo.loopleTalk.service.support;
 
 import java.util.List;
 

@@ -19,8 +19,8 @@ import com.demo.loopleTalk.dto.post.NearestPostResponse;
 import com.demo.loopleTalk.dto.post.SinglePostResponse;
 import com.demo.loopleTalk.dto.post.UpdatePostRequest;
 import com.demo.loopleTalk.service.post.PostService;
-import com.demo.loopleTalk.service.post.support.CursorRequest;
-import com.demo.loopleTalk.service.post.support.CursorResponse;
+import com.demo.loopleTalk.service.support.CursorRequest;
+import com.demo.loopleTalk.service.support.CursorResponse;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

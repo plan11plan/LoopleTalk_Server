@@ -20,8 +20,8 @@ import com.demo.loopleTalk.repository.post.PostHashtagRepository;
 import com.demo.loopleTalk.repository.post.PostLikeRepository;
 import com.demo.loopleTalk.repository.post.PostRepository;
 import com.demo.loopleTalk.repository.post.S3Repository;
-import com.demo.loopleTalk.service.post.support.CursorRequest;
-import com.demo.loopleTalk.service.post.support.CursorResponse;
+import com.demo.loopleTalk.service.support.CursorRequest;
+import com.demo.loopleTalk.service.support.CursorResponse;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
