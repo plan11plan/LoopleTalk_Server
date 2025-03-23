@@ -30,18 +30,16 @@ public class PostController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
-	public void create(MockUserDetails mockUserDetails, @Valid @RequestBody CreatePostRequest request) {
-		Long memberId = mockUserDetails.getMemberId();
+	public void create(@RequestParam Long memberId, @Valid @RequestBody CreatePostRequest request) {
 		postService.create(memberId, request);
 	}
 
 	@GetMapping("/{postId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<SinglePostResponse> getSinglePost(
-		MockUserDetails mockUserDetails,
+		@RequestParam Long memberId,
 		@PathVariable("postId") Long postId
 	) {
-		Long memberId = mockUserDetails.getMemberId();
 		SinglePostResponse response = postService.getPost(memberId, postId);
 
 		return ResponseEntity.ok(response);
@@ -49,10 +47,9 @@ public class PostController {
 
 	@GetMapping("/cursor")
 	public ResponseEntity<CursorResponse<SinglePostResponse>> getPostsByCursor(
-		MockUserDetails mockUserDetails,
+		@RequestParam Long memberId,
 		@ModelAttribute CursorRequest cursorRequest
 	) {
-		Long memberId = mockUserDetails.getMemberId();
 		CursorResponse<SinglePostResponse> response = postService.getPostsByCursor(memberId, cursorRequest);
 
 		return ResponseEntity.ok(response);
@@ -60,7 +57,7 @@ public class PostController {
 
 	@GetMapping("/nearest")
 	public ResponseEntity<CursorResponse<NearestPostResponse>> getNearestPostsWithinScreen(
-		MockUserDetails mockUserDetails,
+		@RequestParam Long memberId,
 		@RequestParam double topRightX,
 		@RequestParam double topRightY,
 		@RequestParam double bottomLeftX,
@@ -71,7 +68,7 @@ public class PostController {
 		@ModelAttribute CursorRequest cursorRequest
 	) {
 		CursorResponse<NearestPostResponse> response = postService.getNearestPostsWithinScreen(
-			mockUserDetails.getMemberId(),
+			memberId,
 			topRightX, topRightY,
 			bottomLeftX, bottomLeftY,
 			myX, myY,
