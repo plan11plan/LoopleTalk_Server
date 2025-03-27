@@ -27,10 +27,12 @@ public class Hashtag {
 
 	@Nullable
 	String hashtagName;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "hashtag_id", updatable = false)
 	private Long hashtagId;
+
 	@CreatedDate
 	@Nullable
 	@Column(name = "created_at", updatable = false)
