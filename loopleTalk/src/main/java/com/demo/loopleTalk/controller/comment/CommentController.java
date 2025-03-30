@@ -83,7 +83,8 @@ public class CommentController {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
-	@GetMapping("/cursor")
+	// 부모 + 댓글들 전부 포함
+	@GetMapping()
 	public ResponseEntity<CursorResponse<CommentGetSingleResponse>> getCommentsByCursor(
 		@RequestParam Long memberId,
 		@RequestBody CommentGetByCursorRequest commentGetByCursorRequest,
@@ -95,6 +96,7 @@ public class CommentController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	// 부모 댓글들만
 	@GetMapping("/posts/{postId}")
 	public ResponseEntity<CursorResponse<CommentGetSingleResponse>> getRootComments(
 		@RequestParam Long memberId,
@@ -106,6 +108,7 @@ public class CommentController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	// 자식 댓글들만
 	@GetMapping("/posts/{postId}/{parentId}/replies")
 	public ResponseEntity<CursorResponse<CommentGetSingleResponse>> getReplies(
 		@RequestParam Long memberId,
