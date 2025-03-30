@@ -40,7 +40,7 @@ public class CommentController {
 		@RequestBody CommentCreateRequest createDto) {
 
 		CommentResponse response = commentService.createComment(memberId, createDto);
-		return new ResponseEntity<>(response, HttpStatus.CREATED);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@PostMapping("/{parentId}")
@@ -50,7 +50,7 @@ public class CommentController {
 		@RequestBody CommentReplyReqeust replyDto) {
 
 		CommentResponse response = commentService.createReplyComment(memberId, parentId, replyDto);
-		return new ResponseEntity<>(response, HttpStatus.CREATED);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@GetMapping("/{commentId}")
@@ -60,7 +60,7 @@ public class CommentController {
 		@PathVariable("commentId") Long commentId) {
 
 		CommentGetSingleResponse response = commentService.getComment(memberId, commentGetSingleRequest, commentId);
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@PatchMapping("/{commentId}")
@@ -70,7 +70,7 @@ public class CommentController {
 		@RequestBody CommentUpdateRequest updateDto) {
 
 		CommentResponse response = commentService.updateComment(memberId, commentId, updateDto);
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@DeleteMapping("/{commentId}")
@@ -80,7 +80,7 @@ public class CommentController {
 		@PathVariable Long commentId) {
 
 		commentService.deleteComment(memberId, commentDeleteRequest, commentId);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@GetMapping("/cursor")
@@ -92,7 +92,7 @@ public class CommentController {
 
 		CursorResponse<CommentGetSingleResponse> response = commentService.getCommentsByCursor(memberId,
 			commentGetByCursorRequest, cursorRequest);
-		return ResponseEntity.ok(response);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@GetMapping("/posts/{postId}")
@@ -103,7 +103,7 @@ public class CommentController {
 	) {
 		CursorResponse<CommentGetSingleResponse> response = commentService.getRootCommentsByCursor(memberId, postId,
 			cursorRequest);
-		return ResponseEntity.ok(response);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@GetMapping("/posts/{postId}/{parentId}/replies")
@@ -114,6 +114,6 @@ public class CommentController {
 	) {
 		CursorResponse<CommentGetSingleResponse> response = commentService.getRepliesByCursor(memberId, parentId,
 			cursorRequest);
-		return ResponseEntity.ok(response);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }
