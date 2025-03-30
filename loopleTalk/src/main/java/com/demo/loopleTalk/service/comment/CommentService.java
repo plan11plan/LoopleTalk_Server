@@ -26,4 +26,9 @@ public interface CommentService {
 		CommentGetByCursorRequest commentGetByCursorRequest,
 		CursorRequest cursorRequest);
 
+	CursorResponse<CommentGetSingleResponse> getRepliesByCursor(Long memberId, Long parentId,
+		CursorRequest cursorRequest);
+
+	CursorResponse<CommentGetSingleResponse> getRootCommentsByCursor(Long memberId, Long postId,
+		CursorRequest cursorRequest);
 }

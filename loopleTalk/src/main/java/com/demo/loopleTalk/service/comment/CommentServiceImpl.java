@@ -34,6 +34,8 @@ public class CommentServiceImpl implements CommentService {
 	private final CommentGetByCursorComponent commentGetByCursorComponent;
 	private final CommentUpdateComponent commentUpdateComponent;
 	private final CommentDeleteComponent commentDeleteComponent;
+	private final CommentGetRepliesByCursorComponent commentGetRepliesByCursorComponent;
+	private final CommentGetRootCommentsByCursorComponent commentGetRootCommentsByCursorComponent;
 	private final MemberRepository memberRepository;
 	private final PostRepository postRepository;
 	private final S3Repository s3Repository;
@@ -87,6 +89,63 @@ public class CommentServiceImpl implements CommentService {
 				String nickname = comment.getMember().getProfile().getNickname();
 				String profileImage = s3Repository.getFileUrl(comment.getMember().getMemberId());
 				CommentResponse commentResponse = mapToResponseDto(comment);
+				return CommentGetSingleResponse.builder()
+					.nickname(nickname)
+					.profileImage(profileImage)
+					.commentResponse(commentResponse)
+					.build();
+			})
+			.collect(Collectors.toList());
+
+		return new CursorResponse<>(originalResponse.nextCursorRequest(), mappedList);
+	}
+
+	@Override
+	public CursorResponse<CommentGetSingleResponse> getRootCommentsByCursor(Long memberId, Long postId,
+		CursorRequest cursorRequest) {
+		validateMember(memberId);
+		Post post = validatePost(postId);
+
+		// 최상위 댓글 컴포넌트를 이용하여 댓글 조회
+		CursorResponse<Comment> originalResponse = commentGetRootCommentsByCursorComponent.getRootCommentsByCursor(post,
+			cursorRequest);
+
+		List<CommentGetSingleResponse> mappedList = originalResponse.contents().stream()
+			.map(comment -> {
+				String nickname = comment.getMember().getProfile().getNickname();
+				String profileImage = s3Repository.getFileUrl(comment.getMember().getMemberId());
+				// CommentResponse.withReplyCount() 정적 팩토리 메서드를 사용하여 댓글 응답 생성
+				int replyCount = comment.getReplies() != null ? comment.getReplies().size() : 0;
+				CommentResponse commentResponse = CommentResponse.withReplyCount(comment, replyCount);
+				return CommentGetSingleResponse.builder()
+					.nickname(nickname)
+					.profileImage(profileImage)
+					.commentResponse(commentResponse)
+					.build();
+			})
+			.collect(Collectors.toList());
+
+		return new CursorResponse<>(originalResponse.nextCursorRequest(), mappedList);
+	}
+
+	@Override
+	public CursorResponse<CommentGetSingleResponse> getRepliesByCursor(Long memberId, Long parentId,
+		CursorRequest cursorRequest) {
+		validateMember(memberId);
+		// 부모 댓글을 먼저 조회
+		Comment parent = commentGetSingleComponent.getCommentById(parentId);
+		validatePost(parent.getPost().getPostId());
+
+		// 대댓글 컴포넌트를 이용하여 자식 댓글 조회
+		CursorResponse<Comment> originalResponse = commentGetRepliesByCursorComponent.getRepliesByCursor(parent,
+			cursorRequest);
+
+		List<CommentGetSingleResponse> mappedList = originalResponse.contents().stream()
+			.map(comment -> {
+				String nickname = comment.getMember().getProfile().getNickname();
+				String profileImage = s3Repository.getFileUrl(comment.getMember().getMemberId());
+				// 단순 매핑은 기본 팩토리 메서드 from() 사용 (대댓글은 replyCount 필요 없을 경우)
+				CommentResponse commentResponse = CommentResponse.from(comment);
 				return CommentGetSingleResponse.builder()
 					.nickname(nickname)
 					.profileImage(profileImage)

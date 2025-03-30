@@ -94,4 +94,26 @@ public class CommentController {
 			commentGetByCursorRequest, cursorRequest);
 		return ResponseEntity.ok(response);
 	}
+
+	@GetMapping("/posts/{postId}")
+	public ResponseEntity<CursorResponse<CommentGetSingleResponse>> getRootComments(
+		@RequestParam Long memberId,
+		@PathVariable Long postId,
+		@ModelAttribute CursorRequest cursorRequest
+	) {
+		CursorResponse<CommentGetSingleResponse> response = commentService.getRootCommentsByCursor(memberId, postId,
+			cursorRequest);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/posts/{postId}/{parentId}/replies")
+	public ResponseEntity<CursorResponse<CommentGetSingleResponse>> getReplies(
+		@RequestParam Long memberId,
+		@PathVariable Long parentId,
+		@ModelAttribute CursorRequest cursorRequest
+	) {
+		CursorResponse<CommentGetSingleResponse> response = commentService.getRepliesByCursor(memberId, parentId,
+			cursorRequest);
+		return ResponseEntity.ok(response);
+	}
 }
