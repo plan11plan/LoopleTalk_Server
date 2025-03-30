@@ -18,6 +18,7 @@ import com.demo.loopleTalk.dto.comment.CommentDeleteRequest;
 import com.demo.loopleTalk.dto.comment.CommentGetByCursorRequest;
 import com.demo.loopleTalk.dto.comment.CommentGetSingleRequest;
 import com.demo.loopleTalk.dto.comment.CommentGetSingleResponse;
+import com.demo.loopleTalk.dto.comment.CommentReplyReqeust;
 import com.demo.loopleTalk.dto.comment.CommentResponse;
 import com.demo.loopleTalk.dto.comment.CommentUpdateRequest;
 import com.demo.loopleTalk.service.comment.CommentService;
@@ -39,6 +40,16 @@ public class CommentController {
 		@RequestBody CommentCreateRequest createDto) {
 
 		CommentResponse response = commentService.createComment(memberId, createDto);
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
+
+	@PostMapping("/{parentId}")
+	public ResponseEntity<CommentResponse> addReply(
+		@RequestParam Long memberId,
+		@PathVariable(value = "parentId") Long parentId,
+		@RequestBody CommentReplyReqeust replyDto) {
+
+		CommentResponse response = commentService.createReplyComment(memberId, parentId, replyDto);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 

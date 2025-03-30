@@ -13,6 +13,7 @@ import com.demo.loopleTalk.dto.comment.CommentDeleteRequest;
 import com.demo.loopleTalk.dto.comment.CommentGetByCursorRequest;
 import com.demo.loopleTalk.dto.comment.CommentGetSingleRequest;
 import com.demo.loopleTalk.dto.comment.CommentGetSingleResponse;
+import com.demo.loopleTalk.dto.comment.CommentReplyReqeust;
 import com.demo.loopleTalk.dto.comment.CommentResponse;
 import com.demo.loopleTalk.dto.comment.CommentUpdateRequest;
 import com.demo.loopleTalk.repository.member.MemberRepository;
@@ -42,6 +43,14 @@ public class CommentServiceImpl implements CommentService {
 		Member member = getMember(memberId);
 		Post post = validatePost(request.postId());
 		Comment comment = commentAddComponent.addComment(member, post, request);
+		return mapToResponseDto(comment);
+	}
+
+	@Override
+	public CommentResponse createReplyComment(Long memberId, Long parentId, CommentReplyReqeust request) {
+		Member member = getMember(memberId);
+		Post post = validatePost(request.postId());
+		Comment comment = commentAddComponent.addReply(member, post, parentId, request);
 		return mapToResponseDto(comment);
 	}
 
